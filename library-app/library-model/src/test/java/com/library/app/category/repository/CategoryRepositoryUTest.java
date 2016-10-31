@@ -83,13 +83,30 @@ public class CategoryRepositoryUTest {
 
 		List<Category> allQueriedCategories = getAllCategories();
 
-		assertEquals("expected size didnt match", categoriesToBeInserted.size(), allQueriedCategories.size());
+		assertEquals(categoriesToBeInserted.size(), allQueriedCategories.size());
 		for (int i = 0; i < categoriesToBeInserted.size(); i++) {
 			assertEquals(categoriesToBeInserted.get(i).getName(), allQueriedCategories.get(i).getName());
 		}
 	}
 
+	@Test
+	public void categoryShouldBeUnique() {
+		Category category = CategoryForTestsRepository.java();
+		persist(category);
+		assertTrue(doesCategoryExist(category));
+	}
+
 	/** helpers */
+
+	private boolean doesCategoryExist(Category category) {
+
+		return dbExecutor.executeCommand(new DBCommand<Boolean>() {
+			@Override
+			public Boolean execute() {
+				return categoryRepository.categoryAllreadyExist(category);
+			}
+		});
+	}
 
 	private List<Category> getAllCategories() {
 		return dbExecutor.executeCommand(new DBCommand<List<Category>>() {

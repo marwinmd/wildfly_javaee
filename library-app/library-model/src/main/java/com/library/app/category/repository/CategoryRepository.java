@@ -39,4 +39,8 @@ public class CategoryRepository {
 		return (ArrayList<Category>) em.createQuery("Select e from Category e Order by e.name").getResultList();
 	}
 
+	public boolean categoryAllreadyExist(Category category) {
+		return em.createQuery("Select e from Category e").getResultList().size() > 0;
+	}
+
 }
